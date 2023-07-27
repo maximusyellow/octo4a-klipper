@@ -5,7 +5,7 @@ set -euxo pipefail
 : ${CONFIG_PATH:="$HOME/config"}
 : ${GCODE_PATH:="$HOME/gcode"}
 
-: ${KLIPPER_REPO:="https://github.com/KevinOConnor/klipper.git"}
+: ${KLIPPER_REPO:="https://github.com/gbkwiatt/klipper.git"}
 : ${KLIPPER_PATH:="$HOME/klipper"}
 : ${KLIPPY_VENV_PATH:="$HOME/venv/klippy"}
 
@@ -13,7 +13,7 @@ set -euxo pipefail
 : ${MOONRAKER_PATH:="$HOME/moonraker"}
 : ${MOONRAKER_VENV_PATH:="$HOME/venv/moonraker"}
 
-: ${CLIENT:="fluidd"}
+: ${CLIENT:="mainsail"}
 : ${CLIENT_PATH:="$HOME/www"}
 
 if [ $(id -u) = 0 ]; then
