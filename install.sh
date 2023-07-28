@@ -31,7 +31,9 @@ python3 py3-virtualenv \
 python3-dev freetype-dev fribidi-dev harfbuzz-dev jpeg-dev lcms2-dev openjpeg-dev tcl-dev tiff-dev tk-dev zlib-dev \
 jq udev
 
-sudo rc-update del mdev sysinit
+# TODO: check if the mdev service is in the sysinit runlevel before trying to delete it from there
+#sudo rc-update del mdev sysinit # this didn't apply to my setup and caused the script to error and stop
+
 sudo setup-udev
 
 case $CLIENT in
