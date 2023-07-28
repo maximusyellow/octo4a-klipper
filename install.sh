@@ -29,12 +29,13 @@ sudo apk add git unzip libffi-dev make gcc g++ \
 ncurses-dev avrdude gcc-avr binutils-avr avr-libc \
 python3 py3-virtualenv \
 python3-dev freetype-dev fribidi-dev harfbuzz-dev jpeg-dev lcms2-dev openjpeg-dev tcl-dev tiff-dev tk-dev zlib-dev \
-jq udev
+jq
+#udev
 
 # TODO: check if the mdev service is in the sysinit runlevel before trying to delete it from there
 #sudo rc-update del mdev sysinit # this didn't apply to my setup and caused the script to error and stop
 
-sudo setup-udev
+#sudo setup-udev
 
 case $CLIENT in
   fluidd)
