@@ -39,10 +39,10 @@ jq
 
 case $CLIENT in
   fluidd)
-    CLIENT_RELEASE_URL=`curl -s https://api.github.com/repos/cadriel/fluidd/releases | jq -r ".[0].assets[0].browser_download_url"`
+    CLIENT_RELEASE_URL=`curl -Ls https://api.github.com/repos/cadriel/fluidd/releases | jq -r ".[0].assets[0].browser_download_url"`
     ;;
   mainsail)
-    CLIENT_RELEASE_URL=`curl -s https://api.github.com/repos/meteyou/mainsail/releases | jq -r ".[0].assets[0].browser_download_url"`
+    CLIENT_RELEASE_URL=`curl -Ls https://api.github.com/repos/meteyou/mainsail/releases | jq -r ".[0].assets[0].browser_download_url"`
     ;;
   *)
     echo "Unknown client $CLIENT (choose fluidd or mainsail)"
@@ -191,10 +191,10 @@ set -exo pipefail
 
 case \$CLIENT in
   fluidd)
-    CLIENT_RELEASE_URL=`curl -s https://api.github.com/repos/cadriel/fluidd/releases | jq -r ".[0].assets[0].browser_download_url"`
+    CLIENT_RELEASE_URL=`curl -Ls https://api.github.com/repos/cadriel/fluidd/releases | jq -r ".[0].assets[0].browser_download_url"`
     ;;
   mainsail)
-    CLIENT_RELEASE_URL=`curl -s https://api.github.com/repos/meteyou/mainsail/releases | jq -r ".[0].assets[0].browser_download_url"`
+    CLIENT_RELEASE_URL=`curl -Ls https://api.github.com/repos/meteyou/mainsail/releases | jq -r ".[0].assets[0].browser_download_url"`
     ;;
   *)
     echo "Unknown client \$CLIENT (choose fluidd or mainsail)"
