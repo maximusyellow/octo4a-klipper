@@ -25,7 +25,7 @@ fi
 # PRE
 ################################################################################
 
-sudo apk add git unzip python2 python2-dev libffi-dev make gcc g++ \
+sudo apk add git unzip libffi-dev make gcc g++ \
 ncurses-dev avrdude gcc-avr binutils-avr avr-libc \
 python3 py3-virtualenv \
 python3-dev freetype-dev fribidi-dev harfbuzz-dev jpeg-dev lcms2-dev openjpeg-dev tcl-dev tiff-dev tk-dev zlib-dev \
@@ -54,7 +54,7 @@ esac
 mkdir -p $CONFIG_PATH $GCODE_PATH
 
 test -d $KLIPPER_PATH || git clone $KLIPPER_REPO $KLIPPER_PATH
-test -d $KLIPPY_VENV_PATH || virtualenv -p python2 $KLIPPY_VENV_PATH
+test -d $KLIPPY_VENV_PATH || virtualenv -p python3 $KLIPPY_VENV_PATH
 $KLIPPY_VENV_PATH/bin/python -m pip install --upgrade pip
 $KLIPPY_VENV_PATH/bin/pip install -r $KLIPPER_PATH/scripts/klippy-requirements.txt
 
@@ -103,7 +103,7 @@ config_path: $CONFIG_PATH
 
 [authorization]
 trusted_clients:
-  192.168.1.0/24
+  192.168.0.0/16
 
 [octoprint_compat]
 
@@ -113,6 +113,12 @@ trusted_clients:
 type: web
 repo: cadriel/fluidd
 path: ~/www
+
+[update_manager mainsail]
+type: web
+channel: stable
+repo: mainsail-crew/mainsail
+path: ~/mainsail
 EOF
 
 sudo rc-update add moonraker
