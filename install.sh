@@ -17,8 +17,9 @@ set -euxo pipefail
 : ${MOONRAKER_PATH:="$HOME/moonraker"}
 : ${MOONRAKER_VENV_PATH:="$HOME/venv/moonraker"}
 
+# Choose "mainsail" or "fluidd"
 : ${CLIENT:="mainsail"}
-: ${CLIENT_PATH:="$HOME/www"}
+: ${CLIENT_PATH:="$HOME/$CLIENT"}
 
 if [ $(id -u) = 0 ]; then
     echo "This script must not run as root"
@@ -157,6 +158,11 @@ type: web
 channel: stable
 repo: mainsail-crew/mainsail
 path: ~/mainsail
+
+[update_manager client fluidd]
+type: web
+repo: cadriel/fluidd
+path: ~/fluidd
 EOF
 
 sudo rc-update add moonraker
