@@ -110,6 +110,10 @@ max_upload_size: 1024
 # Path to klippy Unix Domain Socket
 klippy_uds_address: $COMMS_PATH/klippy.sock
 
+[machine]
+# There are no OpenRC-compatible options at the moment
+provider: none
+
 [file_manager]
 # post processing for object cancel. Not recommended for low resource SBCs such as a Pi Zero. Default False
 enable_object_processing: False
@@ -144,17 +148,14 @@ subscriptions:
 [update_manager]
 refresh_interval: 168
 enable_auto_refresh: True
+# System packages updates are only possible with apt
+enable_system_updates: False
 
 [update_manager mainsail]
 type: web
 channel: stable
 repo: mainsail-crew/mainsail
 path: ~/mainsail
-
-[update_manager client fluidd]
-type: web
-repo: cadriel/fluidd
-path: ~/www
 EOF
 
 sudo rc-update add moonraker
