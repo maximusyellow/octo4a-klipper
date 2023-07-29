@@ -68,7 +68,7 @@ $KLIPPY_VENV_PATH/bin/pip install -r $KLIPPER_PATH/scripts/klippy-requirements.t
 sudo tee /etc/init.d/klipper <<EOF
 #!/sbin/openrc-run
 command="$KLIPPY_VENV_PATH/bin/python"
-command_args="$KLIPPER_PATH/klippy/klippy.py $CONFIG_PATH/printer.cfg -l $LOG_PATH/klippy.log -a /tmp/klippy_uds"
+command_args="$KLIPPER_PATH/klippy/klippy.py $CONFIG_PATH/printer.cfg -l $LOG_PATH/klippy.log -a $COMMS_PATH"
 command_background=true
 command_user="$USER"
 pidfile="/run/klipper.pid"
