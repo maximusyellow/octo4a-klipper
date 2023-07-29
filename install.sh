@@ -113,6 +113,7 @@ klippy_uds_address: $COMMS_PATH/klippy.sock
 [machine]
 # There are no OpenRC-compatible options at the moment
 provider: none
+validate_service: False
 
 [file_manager]
 # post processing for object cancel. Not recommended for low resource SBCs such as a Pi Zero. Default False
