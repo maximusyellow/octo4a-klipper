@@ -7,6 +7,7 @@ set -euxo pipefail
 : ${CONFIG_PATH:="$DATA_PATH/config"}
 : ${GCODE_PATH:="$DATA_PATH/gcodes"}
 : ${LOG_PATH:="$DATA_PATH/logs"}
+: ${COMMS_PATH:="$DATA_PATH/comms"}
 
 : ${KLIPPER_REPO:="https://github.com/gbkwiatt/klipper.git"}
 : ${KLIPPER_PATH:="$HOME/klipper"}
@@ -32,7 +33,7 @@ sudo apk add git unzip libffi-dev make gcc g++ \
 ncurses-dev avrdude gcc-avr binutils-avr avr-libc \
 python3 py3-virtualenv \
 python3-dev freetype-dev fribidi-dev harfbuzz-dev jpeg-dev lcms2-dev openjpeg-dev tcl-dev tiff-dev tk-dev zlib-dev \
-jq patch libsodium
+jq patch libsodium caddy curl
 
 case $CLIENT in
   fluidd)
@@ -55,7 +56,7 @@ mkdir -p $DATA_PATH
 mkdir -p $CONFIG_PATH
 mkdir -p $LOG_PATH
 mkdir -p $GCODE_PATH
-mkdir -p $DATA_PATH/comms
+mkdir -p $COMMS_PATH
 
 touch $CONFIG_PATH/printer.cfg
 
@@ -103,26 +104,57 @@ sudo chmod a+x /etc/init.d/moonraker
 cat > $CONFIG_PATH/moonraker.conf <<EOF
 [server]
 host: 0.0.0.0
-config_path: $CONFIG_PATH
+port: 7125
+# The maximum size allowed for a file upload (in MiB).  Default 1024 MiB
+max_upload_size: 1024
+# Path to klippy Unix Domain Socket
+klippy_uds_address: $COMMS_PATH/klippy.sock
+
+[file_manager]
+# post processing for object cancel. Not recommended for low resource SBCs such as a Pi Zero. Default False
+enable_object_processing: False
 
 [authorization]
+cors_domains:
+    *://my.mainsail.xyz
+    *://*.home.arpa
+    *://*.local
+    *://*.lan
 trusted_clients:
-  192.168.0.0/16
+    10.0.0.0/8
+    127.0.0.0/8
+    169.254.0.0/16
+    172.16.0.0/12
+    192.168.0.0/16
+    FE80::/10
+    ::1/128
 
+# enables partial support of Octoprint API
 [octoprint_compat]
 
-[update_manager]
+# enables moonraker to track and store print history.
+[history]
 
-[update_manager client fluidd]
-type: web
-repo: cadriel/fluidd
-path: ~/www
+# this enables moonraker announcements for mainsail
+[announcements]
+subscriptions:
+    mainsail
+
+# this enables moonraker's update manager
+[update_manager]
+refresh_interval: 168
+enable_auto_refresh: True
 
 [update_manager mainsail]
 type: web
 channel: stable
 repo: mainsail-crew/mainsail
 path: ~/mainsail
+
+[update_manager client fluidd]
+type: web
+repo: cadriel/fluidd
+path: ~/www
 EOF
 
 sudo rc-update add moonraker
@@ -131,8 +163,6 @@ sudo service moonraker start
 ################################################################################
 # MAINSAIL/FLUIDD
 ################################################################################
-
-sudo apk add caddy curl
 
 sudo tee /etc/caddy/Caddyfile <<EOF
 :80
