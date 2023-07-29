@@ -159,7 +159,7 @@ channel: stable
 repo: mainsail-crew/mainsail
 path: ~/mainsail
 
-[update_manager client fluidd]
+[update_manager fluidd]
 type: web
 repo: cadriel/fluidd
 path: ~/fluidd
