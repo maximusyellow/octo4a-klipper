@@ -2,8 +2,11 @@
 
 set -euxo pipefail
 
-: ${CONFIG_PATH:="$HOME/config"}
-: ${GCODE_PATH:="$HOME/gcode"}
+: ${DATA_PATH:="$HOME/printer_data"}
+
+: ${CONFIG_PATH:="$DATA_PATH/config"}
+: ${GCODE_PATH:="$DATA_PATH/gcodes"}
+: ${LOG_PATH:="$DATA_PATH/logs"}
 
 : ${KLIPPER_REPO:="https://github.com/gbkwiatt/klipper.git"}
 : ${KLIPPER_PATH:="$HOME/klipper"}
@@ -29,13 +32,7 @@ sudo apk add git unzip libffi-dev make gcc g++ \
 ncurses-dev avrdude gcc-avr binutils-avr avr-libc \
 python3 py3-virtualenv \
 python3-dev freetype-dev fribidi-dev harfbuzz-dev jpeg-dev lcms2-dev openjpeg-dev tcl-dev tiff-dev tk-dev zlib-dev \
-jq patch
-#udev
-
-# TODO: check if the mdev service is in the sysinit runlevel before trying to delete it from there
-#sudo rc-update del mdev sysinit # this didn't apply to my setup and caused the script to error and stop
-
-#sudo setup-udev
+jq patch libsodium
 
 case $CLIENT in
   fluidd)
@@ -54,7 +51,13 @@ esac
 # KLIPPER
 ################################################################################
 
-mkdir -p $CONFIG_PATH $GCODE_PATH
+mkdir -p $DATA_PATH
+mkdir -p $CONFIG_PATH
+mkdir -p $LOG_PATH
+mkdir -p $GCODE_PATH
+mkdir -p $DATA_PATH/comms
+
+touch $CONFIG_PATH/printer.cfg
 
 test -d $KLIPPER_PATH || git clone $KLIPPER_REPO $KLIPPER_PATH
 test -d $KLIPPY_VENV_PATH || virtualenv -p python3 $KLIPPY_VENV_PATH
@@ -64,7 +67,7 @@ $KLIPPY_VENV_PATH/bin/pip install -r $KLIPPER_PATH/scripts/klippy-requirements.t
 sudo tee /etc/init.d/klipper <<EOF
 #!/sbin/openrc-run
 command="$KLIPPY_VENV_PATH/bin/python"
-command_args="$KLIPPER_PATH/klippy/klippy.py $CONFIG_PATH/printer.cfg -l /tmp/klippy.log -a /tmp/klippy_uds"
+command_args="$KLIPPER_PATH/klippy/klippy.py $CONFIG_PATH/printer.cfg -l $LOG_PATH/klippy.log -a /tmp/klippy_uds"
 command_background=true
 command_user="$USER"
 pidfile="/run/klipper.pid"
@@ -77,8 +80,6 @@ sudo service klipper start
 ################################################################################
 # MOONRAKER
 ################################################################################
-
-sudo apk add libsodium curl-dev
 
 test -d $MOONRAKER_PATH || git clone $MOONRAKER_REPO $MOONRAKER_PATH
 test -d $MOONRAKER_VENV_PATH || virtualenv -p python3 $MOONRAKER_VENV_PATH
@@ -99,7 +100,7 @@ EOF
 
 sudo chmod a+x /etc/init.d/moonraker
 
-cat > $HOME/moonraker.conf <<EOF
+cat > $CONFIG_PATH/moonraker.conf <<EOF
 [server]
 host: 0.0.0.0
 config_path: $CONFIG_PATH
