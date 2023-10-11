@@ -30,11 +30,12 @@ fi
 # PRE
 ################################################################################
 
-sudo apk add git unzip libffi-dev make gcc g++ \
-ncurses-dev avrdude gcc-avr binutils-avr avr-libc \
-python3 py3-virtualenv \
-python3-dev freetype-dev fribidi-dev harfbuzz-dev jpeg-dev lcms2-dev openjpeg-dev tcl-dev tiff-dev tk-dev zlib-dev \
-jq patch libsodium caddy curl polkit grep iproute2
+# Packages now included in my build config
+#sudo apk add git unzip libffi-dev make gcc g++ \
+#ncurses-dev avrdude gcc-avr binutils-avr avr-libc \
+#python3 py3-virtualenv \
+#python3-dev freetype-dev fribidi-dev harfbuzz-dev jpeg-dev lcms2-dev openjpeg-dev tcl-dev tiff-dev tk-dev zlib-dev \
+#jq patch libsodium caddy curl polkit grep iproute2
 
 case $CLIENT in
   fluidd)
